@@ -4,10 +4,10 @@ import config from './config.js';
 const knex = Knex({
   client: 'pg',
   connection: {
-    host: config.db.host,
-    user: config.db.user,
-    password: config.db.password,
-    database: config.db.name
+    ...("" !== config.db.host && {host: config.db.host}),
+    ...("" !== config.db.user && {user: config.db.user}),
+    ...("" !== config.db.password && {password: config.db.password}),
+    ...("" !== config.db.name && {database: config.db.name})
   }
 });
 
