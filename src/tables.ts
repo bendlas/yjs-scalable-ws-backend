@@ -25,11 +25,14 @@ export const drop = async () => {
 }
 
 export const recreate = async () => {
-    await drop();
-    await create()
+  const dropped = await drop();
+  await create();
+  return dropped;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-    (process.argv[2] === "--force" ? recreate() : create())
-        .then(() => knex.destroy());
+  (process.argv[2] === "--recreate"
+    ? recreate().then((dropped) => dropped || console.log("no previous table"))
+    : create().then((created) => created || console.log("table already exists"))
+  ).then(() => knex.destroy());
 }
